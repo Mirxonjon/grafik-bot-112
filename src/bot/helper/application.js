@@ -67,7 +67,7 @@ if(application) {
     })
 }
 } else {
-    bot.sendMessage(chatId , user.language == 'uz' ? '<b>Ish grafikni</b> tanlang' : 'Выберите <b>график работы</b>' , {
+    bot.sendMessage(chatId , user.language == 'uz' ? '<b>Ish grafikni</b>tanlang' : 'Выберите <b>график работы</b>' , {
         parse_mode :'HTML',
         reply_markup: {
             one_time_keyboard : timeKeyboard,
@@ -92,6 +92,15 @@ const addDayOffFirst = async(msg) => {
     const days_Keyboard = await daysKeyboard(user)
     
     if(DaysUz.includes(text) || DaysRu.includes(text)) {
+
+        let findlanguageDays = user.language == 'uz' ? DaysUz : DaysRu
+
+        
+        let filteredArr =  findlanguageDays.filter(e => e != text)
+        let sortDaysArr =[]
+        filteredArr.map((e, i) => (i+1)%2 != 0 ? sortDaysArr.push([filteredArr[i],filteredArr[i+1]] ) : null )
+
+
         await User.findByIdAndUpdate(user._id,{...user , action : 'add_day_off_second'},{new:true})
 
         const  application = await Application.findOne({user:user._id}).lean()
@@ -101,23 +110,21 @@ const addDayOffFirst = async(msg) => {
 
 
 
-    bot.sendMessage(chatId ,  user.language == 'uz' ?  `<b>2-dam olish kunini </b> tanlang` :'Выберите <b>2-й выходной день</b>', {
+    bot.sendMessage(chatId ,  user.language == 'uz' ?  `<b>2-dam olish kunini </b>tanlang` :'Выберите <b>2-й выходной день</b>', {
         parse_mode:'HTML',
         reply_markup: {
-            // input_field_placeholder :'dddd',
-            // remove_keyboard: true ,
-            
-            one_time_keyboard : days_Keyboard
+            remove_keyboard: true ,
+            keyboard : sortDaysArr,
+            resize_keyboard: true 
         }
     })
 
 
 } else {
-    bot.sendMessage(chatId , user.language == 'uz' ?  `<b>1-dam olish kunini </b> tanlang` :'Выберите <b>1-й выходной день</b>' , {
+    bot.sendMessage(chatId , user.language == 'uz' ?  `<b>1-dam olish kunini </b>tanlang` :'Выберите <b>1-й выходной день</b>' , {
         parse_mode: 'HTML',
         reply_markup: {
             keyboard : days_Keyboard,
-            // remove_keyboard : true,
             resize_keyboard: true
         }
     })

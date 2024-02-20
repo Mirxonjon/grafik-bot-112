@@ -3,11 +3,10 @@ const User = require("../../model/user")
 const { formatDate, dateDayObj, InfoUserArr } = require("../../utils/time")
 const { arrayToExcel } = require("../../utils/utils")
 const { bot } = require("../bot")
-const { statisticKeyboardRu, statisticKeyboardUz, CalendarKeyboardUz, adminKeyboardRu, adminKeyboardUZ } = require("../menu/keyboard")
+const { statisticKeyboardRu, statisticKeyboardUz, CalendarKeyboardUz, adminKeyboardRu, adminKeyboardUZ, CalendarKeyboardRu } = require("../menu/keyboard")
 
 const  ShowDepeartment = async (msg) => {
     const chatId = msg.from.id
-    const text = msg.text
 
     const user = await User.findOne({chatId}).lean()
 
@@ -24,13 +23,13 @@ const positiveAnswersMoth = async (msg) => {
     const chatId = msg.from.id 
     const user = await User.findOne({chatId}).lean()
 
-    let findkeyboardLang = user.language == 'uz' ? CalendarKeyboardUz  : statisticKeyboardRu
+    let findkeyboardLang = user.language == 'uz' ? CalendarKeyboardUz  : CalendarKeyboardRu
 
     findkeyboardLang.map(e => e.map(j => j.callback_data = `positive_${j.info}_${j.text}`) )
 
     console.log(findkeyboardLang);
     // const findPositiveApplications = 
-    bot.sendMessage(chatId ,  user.language == 'uz' ? `Ijobiy javob berilgan ma'lumotlar,  Kerakli Oy ni tanlang : ` : `Информация ответила положительно, выберите нужный месяц:`  , {
+    bot.sendMessage(chatId ,  user.language == 'uz' ? `Ijobiy javob berilgan ma'lumotlar, kerakli oyni tanlang:` : `Данные при положительном ответе выберите нужный месяц:`  , {
         reply_markup : {
             inline_keyboard :findkeyboardLang
         }
@@ -41,13 +40,13 @@ const rejectedAnswersMoth = async (msg) => {
     const chatId = msg.from.id 
     const user = await User.findOne({chatId}).lean()
 
-    let findkeyboardLang = user.language == 'uz' ? CalendarKeyboardUz  : statisticKeyboardRu
+    let findkeyboardLang = user.language == 'uz' ? CalendarKeyboardUz  : CalendarKeyboardRu
 
     findkeyboardLang.map(e => e.map(j => j.callback_data = `rejected_${j.info}_${j.text}`) )
 
     console.log(findkeyboardLang);
     // const findPositiveApplications = 
-    bot.sendMessage(chatId , user.language == 'uz' ? `Rad javobi berilgan ma'lumotlar,  Kerakli Oy ni tanlang : ` : `Отклоненные данные, выберите нужный месяц:` , {
+    bot.sendMessage(chatId , user.language == 'uz' ? `Rad javobi berilgan ma'lumotlar, kerakli oyni tanlang:` : `Отклоненные данные, выберите нужный месяц:` , {
         reply_markup : {
             inline_keyboard :findkeyboardLang
         }
@@ -58,11 +57,11 @@ const allAnswersMoth = async (msg) => {
     const chatId = msg.from.id 
     const user = await User.findOne({chatId}).lean()
 
-    let findkeyboardLang = user.language == 'uz' ? CalendarKeyboardUz  : statisticKeyboardRu
+    let findkeyboardLang = user.language == 'uz' ? CalendarKeyboardUz  : CalendarKeyboardRu
 
     findkeyboardLang.map(e => e.map(j => j.callback_data = `answerAll_${j.info}_${j.text}`) )
 
-    bot.sendMessage(chatId , user.language == 'uz' ? `Barcha javobi berilgan ma'lumotlar,  Kerakli Oy ni tanlang : ` : `Отклоненные данные, выберите нужный месяц:` , {
+    bot.sendMessage(chatId , user.language == 'uz' ? `Barcha javobi berilgan ma'lumotlar,  Kerakli Oy ni tanlang:` : `Вся ответная информация, выберите нужный месяц:` , {
         reply_markup : {
             inline_keyboard :findkeyboardLang
         }
@@ -70,7 +69,6 @@ const allAnswersMoth = async (msg) => {
 }
 
 const positiveAnswers = async (query) => {
-    // console.log(query);
     const chatId = query.from.id 
     const user = await User.findOne({chatId}).lean()
     const dataCallback = query.data.split('_')
@@ -91,18 +89,16 @@ const positiveAnswers = async (query) => {
     }).lean()
 
     if(!findAllStatistikAplication.length) {
-        bot.sendMessage(chatId , `So'ralgan oy da Malumot yo'q` )
+        bot.sendMessage(chatId , user.language == 'uz' ?  `Ma'lumot yo‘q` : 'Нет информации' )
     }else {
         findAllStatistikAplication.map(e => InfoUserArr.push([e.full_name , e.number , e.time,e.day_off, e.application_latter,e.requestCount  ,e.sentdata ,e.admin_confirmation , formatDate(e.createdAt) ]))
         const xlsx = await arrayToExcel(InfoUserArr ,`${monthName}.xlsx` , `${monthName}.xlsx`)
 
-        await bot.sendDocument(chatId , xlsx,{caption : 'ijobiy javob berilgan foydalanuvchilar' },  {
+        await bot.sendDocument(chatId , xlsx,{caption :  user.language =='uz' ? 'Ijobiy javob berilganlar' : 'Положительные ответы'  },  {
             filename : `${monthName}.xlsx` ,
             contentType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',})
     }
 
-
-    
 }
 
 const rejectedAnswers = async (query) => {
@@ -127,12 +123,12 @@ const rejectedAnswers = async (query) => {
     }).lean()
 
     if(!findAllStatistikAplication.length) {
-        bot.sendMessage(chatId , `So'ralgan oy da Malumot yo'q` )
+        bot.sendMessage(chatId , user.language == 'uz' ?  `Ma'lumot yo‘q` : 'Нет информации' )
     }else {
         findAllStatistikAplication.map(e => InfoUserArr.push([e.full_name , e.number , e.time,e.day_off, e.application_latter,e.requestCount  ,e.sentdata ,e.admin_confirmation , formatDate(e.createdAt) ]))
         const xlsx = await arrayToExcel(InfoUserArr ,`${monthName}.xlsx` , `${monthName}.xlsx`)
 
-        await bot.sendDocument(chatId , xlsx,{caption : 'Rad javobi berilgan foydalanuvchilar' },  {
+        await bot.sendDocument(chatId , xlsx,{caption : user.language =='uz' ? 'Rad javobi berilganlar': 'Отклоненный' },  {
             filename : `${monthName}.xlsx` ,
             contentType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',})
     }
@@ -160,12 +156,13 @@ const allAnswers = async(query) => {
     }).lean()
 
     if(!findAllStatistikAplication.length) {
-        bot.sendMessage(chatId , `So'ralgan oy da Malumot yo'q` )
+        bot.sendMessage(chatId , user.language == 'uz' ?  `Ma'lumot yo‘q` : 'Нет информации' )
+
     }else {
         findAllStatistikAplication.map(e => InfoUserArr.push([e.full_name , e.number , e.time,e.day_off, e.application_latter,e.requestCount  ,e.sentdata ,e.admin_confirmation , formatDate(e.createdAt) ]))
         const xlsx = await arrayToExcel(InfoUserArr ,`${monthName}.xlsx` , `${monthName}.xlsx`)
 
-        await bot.sendDocument(chatId , xlsx,{caption : 'barchasi javobi berilgan foydalanuvchilar' },  {
+        await bot.sendDocument(chatId , xlsx,{caption :  user.language =='uz' ? 'Barcha javob berilganlar' : 'На все есть ответы'  },  {
             filename : `${monthName}.xlsx` ,
             contentType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',})
     }
@@ -194,8 +191,7 @@ const allUsers = async(msg) => {
 
         Users.map(e => InfoUser.push([e.full_name , e.number , formatDate(e.createdAt) ]))
         const xlsx = await arrayToExcel(InfoUser ,`Users.xlsx` , `Users.xlsx`)
-
-        await bot.sendDocument(chatId , xlsx,{caption : 'Foydalanuvchilar' },  {
+        await bot.sendDocument(chatId , xlsx,{caption :  user.language =='uz' ? 'Foydalanuvchilar' : 'Пользователи'  },  {
             filename : `Users.xlsx` ,
             contentType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',})
 
@@ -206,7 +202,7 @@ const  sentMessageToAllUsersMenu = async(msg) => {
     const user = await User.findOne({chatId}).lean()
 
     await User.findByIdAndUpdate(user._id , {...user , action : 'sent-message-all'})
-    bot.sendMessage(chatId ,  user.language == 'uz' ?`Siz hamma foydalanuvchilarga habar yubormoqdasiz` : `Вы отправляете сообщение всем пользователям`,{
+    bot.sendMessage(chatId ,  user.language == 'uz' ?`Siz hamma foydalanuvchilarga xabar yubormoqdasiz` : `Вы отправляете сообщение всем пользователям`,{
         reply_markup : {
             keyboard: [
                 [
@@ -229,6 +225,8 @@ const sentMessageToAllUsers = async (msg) => {
     const user = await User.findOne({chatId}).lean()
 
     if(text == 'Xabar yuborishni yakunlash' || text == 'Завершить отправку сообщения' ) {
+    await User.findByIdAndUpdate(user._id , {...user , action : 'menu'})
+
         bot.sendMessage(chatId, user.language == 'uz' ? `Menyuni tanlang, ${user.admin ? 'Admin': user.full_name}`: `Выберите меню, ${user.admin ? 'Admin': user.full_name}`,{
             reply_markup: {
                 keyboard: user.language == 'uz' ? adminKeyboardUZ : adminKeyboardRu ,
@@ -236,7 +234,6 @@ const sentMessageToAllUsers = async (msg) => {
             },
         })
     } else {
-
         let allUsers = await User.find({
             admin:false
         }).lean()
@@ -244,7 +241,7 @@ const sentMessageToAllUsers = async (msg) => {
         allUsers.forEach(e => {
             bot.sendMessage(e.chatId , text)
         })
-        bot.sendMessage(chatId , user.language == 'uz' ? 'Xabar yuborildi' : adminKeyboardRu ,)
+        bot.sendMessage(chatId , user.language == 'uz' ? 'Xabar yuborildi' : 'Сообщение отправлено' ,)
     }
 
 

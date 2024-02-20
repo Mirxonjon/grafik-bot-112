@@ -144,7 +144,7 @@ const daysKeyboard = async (user) => {
 const statisticKeyboardUz = [
     [
         {
-            text : 'Ijobiy hal qilinganlari'
+            text : 'Hal etilganlar'
         },
         {
             text: 'Rad etilganlar'
@@ -171,7 +171,7 @@ const statisticKeyboardUz = [
 const statisticKeyboardRu = [
     [
         {
-            text : 'Положительно'
+            text : 'Решено'
         },
         {
             text: 'Отклоненный'
@@ -332,5 +332,6 @@ module.exports = {
     daysKeyboard,
     statisticKeyboardUz,
     statisticKeyboardRu,
-    CalendarKeyboardUz
+    CalendarKeyboardUz,
+    CalendarKeyboardRu
 }

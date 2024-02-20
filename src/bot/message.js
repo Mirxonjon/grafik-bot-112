@@ -58,7 +58,7 @@ bot.on('message' ,  async msg => {
             if(text == 'Statistika'  || text == 'Статистика') {
                 ShowDepeartment(msg)
             }
-            if(text == 'Ijobiy hal qilinganlari' || text == 'Положительно' ) {
+            if(text == 'Hal etilganlar' || text == 'Решено' ) {
                 positiveAnswersMoth(msg)
             }
             if(text == 'Rad etilganlar' || text == 'Отклоненный') {
@@ -70,7 +70,7 @@ bot.on('message' ,  async msg => {
             if(text == 'Foydalanuvchilar' || text == 'Пользователи') {
                 allUsers(msg)
             }
-            if(text == 'Xabar yuborish' || text == 'Пользователи') {
+            if(text == 'Xabar yuborish' || text == 'Отправит сообшения') {
                 sentMessageToAllUsersMenu(msg)
             }
         }
