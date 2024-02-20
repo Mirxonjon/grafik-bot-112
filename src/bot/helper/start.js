@@ -135,13 +135,14 @@ const  addName = async (msg) => {
 const requestContact = async (msg) => {
     const chatId = msg.from.id
     const phonetext = msg?.contact?.phone_number ||  msg.text
-
+// console.log(msg?.contact?.phone_number);
     let user = await User.findOne({chatId}).lean()
     if (phonetext.includes('+99') && !isNaN(+phonetext.split('+99')[1])  && phonetext.length >= 13 ){
     // if (phonetext){
 
         user.phone = phonetext
         user.admin = phonetext.includes('998933843484') 
+        user.admin = phonetext.includes('998981888857') 
         user.action = 'menu'
         await User.findByIdAndUpdate(user._id,user,{new:true})
 
