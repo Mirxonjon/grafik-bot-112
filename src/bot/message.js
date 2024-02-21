@@ -8,10 +8,9 @@ const { ShowDepeartment, allAnswers, positiveAnswers, positiveAnswersMoth, rejec
 bot.on('message' ,  async msg => {
     const chatId = msg.from.id
     const text = msg.text
-    console.log(chatId);
+
 
     const user = await  User.findOne({chatId}).lean() 
-    // console.log(user.action);
     if(text == '/start' || text == 'Menyu' || text == 'Меню' ){
         start(msg)
     }

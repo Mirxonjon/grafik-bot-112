@@ -325,14 +325,14 @@ Operator arizasini tasdiqlasangiz "✅"
 
 
 const ApplicationChat = async(query) => {
-    console.log(query);
+
     const chatId = query.from.id
     const text = query.text
     const message_id = query.message.message_id
     let dataArr = query.data.split('_')
     let  getUser  = await User.findOne({_id : dataArr[1]}).populate().lean()
     let  senderUser = await User.findOne({chatId}).populate().lean()
-    // console.log(getUser ,senderUser ,'aaaaaaaaaaaaaaaaaaaaa');
+
 
     if(!senderUser.admin) {
         if(senderUser.messageCount) {
@@ -401,7 +401,7 @@ const SentMessagetoUser = async(msg) => {
 
 
     } else if(!senderUser.admin) {
-        console.log(senderUser);
+
         if(senderUser.messageCount) {
             bot.sendMessage(senderUser.chatId , senderUser.language == 'uz' ?  `Siz Adminga Habar yuborib Boldingiz` : `Вы отправили сообщение администратору` , {
                 reply_markup: {
@@ -487,7 +487,6 @@ const SentMessagetoUser = async(msg) => {
 
 
 const answerApplication = async (query) => {
-    console.log(query);
     const chatId = query.from.id
     const text = query.text
     const message_id = query.message.message_id
@@ -499,7 +498,6 @@ const answerApplication = async (query) => {
     await Application.findByIdAndUpdate(findApplications._id,{...findApplications , sent :false, })
     
     await User.findByIdAndUpdate(findAdmin._id,{action : 'menu'},{new:true})
-    console.log('okkk' ,dataArr[2]);
     
     if(dataArr[1] == 'true') {
 

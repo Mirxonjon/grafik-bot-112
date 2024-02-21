@@ -27,7 +27,6 @@ const positiveAnswersMoth = async (msg) => {
 
     findkeyboardLang.map(e => e.map(j => j.callback_data = `positive_${j.info}_${j.text}`) )
 
-    console.log(findkeyboardLang);
     // const findPositiveApplications = 
     bot.sendMessage(chatId ,  user.language == 'uz' ? `Ijobiy javob berilgan ma'lumotlar, kerakli oyni tanlang:` : `Данные при положительном ответе выберите нужный месяц:`  , {
         reply_markup : {
@@ -44,8 +43,6 @@ const rejectedAnswersMoth = async (msg) => {
 
     findkeyboardLang.map(e => e.map(j => j.callback_data = `rejected_${j.info}_${j.text}`) )
 
-    console.log(findkeyboardLang);
-    // const findPositiveApplications = 
     bot.sendMessage(chatId , user.language == 'uz' ? `Rad javobi berilgan ma'lumotlar, kerakli oyni tanlang:` : `Отклоненные данные, выберите нужный месяц:` , {
         reply_markup : {
             inline_keyboard :findkeyboardLang

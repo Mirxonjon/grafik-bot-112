@@ -41,7 +41,6 @@ const chooseNewLanguage = async(msg) => {
         user.action = 'menu'
         
         await User.findByIdAndUpdate(user._id,user,{new:true})
-        // console.log(user);
         bot.sendMessage(chatId, user.language == 'uz' ? `Menyuni tanlang, ${user.admin ? 'Admin': user.full_name}`: `Выберите меню, ${user.admin ? 'Admin': user.full_name}`,{
             reply_markup: {
                 keyboard: user.admin ? user.language == 'uz' ? adminKeyboardUZ :adminKeyboardRu  : user.language=='uz' ? userKeyboardUz : userKeyboardRU ,

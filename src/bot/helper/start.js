@@ -7,10 +7,8 @@ const  start = async( msg ) => {
 
     let  checkUser =  await User.findOne({chatId}).lean()
 
-    console.log(checkUser);
 
     if(checkUser?.full_name || checkUser?.language || checkUser?.phone) {
-        console.log(checkUser.admin == true);
 
         await User.findByIdAndUpdate(checkUser._id,{...checkUser ,  action:  'menu'  },{new:true})
 
@@ -60,10 +58,8 @@ const  chooseLanguage = async (msg) => {
     if(`🇺🇿 O‘zbekcha` == text || `🇷🇺  Русский` == text ) {
         user.language = text  == `🇺🇿 O‘zbekcha` ? 'uz' : 'ru' 
         user.action = 'add_name'
-        
-        console.log(user, msg.text ,'sssss');
+
         await User.findByIdAndUpdate(user._id,user,{new:true})
-        // console.log(user);
         bot.sendMessage(
             chatId,
             user.language == 'uz' ? `👤 To‘liq F.I.Sh kiriting (masalan: Mahmudov Alisher Baxodir o‘g‘li)` : `👤 Введите полное Ф.И.О. (например:  Махмудов Алишер Баходир угли)`,
@@ -97,7 +93,6 @@ const  chooseLanguage = async (msg) => {
 const  addName = async (msg) => {
         const chatId = msg.from.id
         const text = msg.text
-        // console.log(text.split(' ').length == 4);
 
         let user = await User.findOne({chatId}).lean()
         if( text.split(' ').length >= 3 ) {
@@ -105,9 +100,7 @@ const  addName = async (msg) => {
             user.full_name = text
 
             user.action = 'request_contact'
-            console.log({...user} , text);
             await User.findByIdAndUpdate(user._id,user,{new:true})
-            // console.log(user);
             bot.sendMessage(
                 chatId,
                 user.language == 'uz' ? '📱Telefon raqamingizni kiriting (masalan: +998*********)' :   `📱Введите номер телефона (например: +998*********)`,
