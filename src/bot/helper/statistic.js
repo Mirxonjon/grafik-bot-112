@@ -28,7 +28,7 @@ const positiveAnswersMoth = async (msg) => {
     findkeyboardLang.map(e => e.map(j => j.callback_data = `positive_${j.info}_${j.text}`) )
 
     // const findPositiveApplications = 
-    bot.sendMessage(chatId ,  user.language == 'uz' ? `Ijobiy javob berilgan ma'lumotlar, kerakli oyni tanlang:` : `Данные при положительном ответе выберите нужный месяц:`  , {
+    bot.sendMessage(chatId ,  user.language == 'uz' ? `Ijobiy javob berilgan ma'lumotlar, kerakli oyni tanlang:` : `Данные, на которых был дан положительный ответ, выберите нужный месяц:`  , {
         reply_markup : {
             inline_keyboard :findkeyboardLang
         }
@@ -43,7 +43,7 @@ const rejectedAnswersMoth = async (msg) => {
 
     findkeyboardLang.map(e => e.map(j => j.callback_data = `rejected_${j.info}_${j.text}`) )
 
-    bot.sendMessage(chatId , user.language == 'uz' ? `Rad javobi berilgan ma'lumotlar, kerakli oyni tanlang:` : `Отклоненные данные, выберите нужный месяц:` , {
+    bot.sendMessage(chatId , user.language == 'uz' ? `Rad javobi berilgan ma'lumotlar, kerakli oyni tanlang:` : `Данные, на которых был дан отказ, выберите нужный месяц:` , {
         reply_markup : {
             inline_keyboard :findkeyboardLang
         }
@@ -58,7 +58,7 @@ const allAnswersMoth = async (msg) => {
 
     findkeyboardLang.map(e => e.map(j => j.callback_data = `answerAll_${j.info}_${j.text}`) )
 
-    bot.sendMessage(chatId , user.language == 'uz' ? `Barcha javobi berilgan ma'lumotlar,  Kerakli Oy ni tanlang:` : `Вся ответная информация, выберите нужный месяц:` , {
+    bot.sendMessage(chatId , user.language == 'uz' ? `Barcha javobi berilgan ma'lumotlar,  Kerakli Oy ni tanlang:` : `Данные, на которых были даны все ответы, выберите нужный месяц:` , {
         reply_markup : {
             inline_keyboard :findkeyboardLang
         }
