@@ -9,7 +9,18 @@ const  start = async( msg ) => {
 
     console.log(checkUser);
 
-    if(!checkUser) {
+    if(checkUser?.full_name || checkUser?.language || checkUser?.phone) {
+        console.log(checkUser.admin == true);
+
+        await User.findByIdAndUpdate(checkUser._id,{...checkUser ,  action:  'menu'  },{new:true})
+
+        bot.sendMessage(chatId, checkUser.language == 'uz' ? `Menyuni tanlang, ${checkUser.admin ? 'Admin': checkUser.full_name}`: `Выберите меню, ${checkUser.admin ? 'Admin': checkUser.full_name}`,{
+            reply_markup: {
+                keyboard: checkUser.admin ? (checkUser.language == 'uz' ? adminKeyboardUZ : adminKeyboardRu)  : (checkUser.language=='uz' ? userKeyboardUz : userKeyboardRU) ,
+                resize_keyboard: true
+            },
+        })
+    }else if (!checkUser) {
         let newUser = new User({
             chatId,
             admin: false,
@@ -35,18 +46,8 @@ const  start = async( msg ) => {
                     resize_keyboard: true
                 }
             })
-    } else {
-        console.log(checkUser.admin == true);
-
-        await User.findByIdAndUpdate(checkUser._id,{...checkUser ,  action:  'menu'  },{new:true})
-
-        bot.sendMessage(chatId, checkUser.language == 'uz' ? `Menyuni tanlang, ${checkUser.admin ? 'Admin': checkUser.full_name}`: `Выберите меню, ${checkUser.admin ? 'Admin': checkUser.full_name}`,{
-            reply_markup: {
-                keyboard: checkUser.admin ? (checkUser.language == 'uz' ? adminKeyboardUZ : adminKeyboardRu)  : (checkUser.language=='uz' ? userKeyboardUz : userKeyboardRU) ,
-                resize_keyboard: true
-            },
-        })
     }
+
 
 }
 
@@ -134,15 +135,14 @@ const  addName = async (msg) => {
 
 const requestContact = async (msg) => {
     const chatId = msg.from.id
-    const phonetext = msg?.contact?.phone_number ||  msg.text
-console.log(msg?.contact?.phone_number);
+    const phonetext = `+${+msg?.contact?.phone_number}` ||  msg.text
+
     let user = await User.findOne({chatId}).lean()
     if (phonetext.includes('+99') && !isNaN(+phonetext.split('+99')[1])  && phonetext.length >= 13 ){
     // if (phonetext){
 
         user.phone = phonetext
-        user.admin = phonetext.includes('998933843484') || phonetext.includes('998981888857') 
-     
+        user.admin = phonetext.includes('998933843484') ? phonetext.includes('998933843484') : phonetext.includes('998981888857') 
         user.action = 'menu'
         await User.findByIdAndUpdate(user._id,user,{new:true})
 
