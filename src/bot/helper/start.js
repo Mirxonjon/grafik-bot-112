@@ -135,7 +135,7 @@ const requestContact = async (msg) => {
     // if (phonetext){
 
         user.phone = phonetext
-        user.admin = phonetext.includes('998981888857') ? phonetext.includes('998981888857') : phonetext.includes('998933843484') 
+        user.admin = phonetext.includes('998981888857') ? phonetext.includes('998981888857') : phonetext.includes('998933843484')
         user.action = 'menu'
         await User.findByIdAndUpdate(user._id,user,{new:true})
 

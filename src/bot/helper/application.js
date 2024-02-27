@@ -392,7 +392,7 @@ const SentMessagetoUser = async(msg) => {
     await User.findByIdAndUpdate(senderUser._id,{...senderUser , action : `menu`},{new:true})
 
 
-    bot.sendMessage(chatId, senderUser.language == 'uz' ? `Menyuni tanlang, ${senderUser.admin ? 'Admin': senderUser.full_name}`: `Выберите меню, ${user.admin ? 'Admin': user.full_name}`,{
+    bot.sendMessage(chatId, senderUser.language == 'uz' ? `Menyuni tanlang, ${senderUser.admin ? 'Admin': senderUser.full_name}`: `Выберите меню, ${senderUser.admin ? 'Admin': senderUser.full_name}`,{
         reply_markup: {
             keyboard: senderUser.admin == true ? senderUser.language == 'uz' ? adminKeyboardUZ : adminKeyboardRu  : senderUser.language=='uz' ? userKeyboardUz : userKeyboardRU ,
             resize_keyboard: true
