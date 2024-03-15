@@ -1,9 +1,9 @@
 const User = require('../model/user')
 const {bot} = require('./bot')
-const { getAlltime, addApplication, addDayOffFirst, addDayOffSecond, addComment, sentApplication, showApplication, SentMessagetoUser } = require('./helper/application')
+const { getAlltime, addApplication, addDayOffFirst, addDayOffSecond, addComment, sentApplication, showApplication, SentMessagetoUser, addSupervazer } = require('./helper/application')
 const { chooseNewLanguage, changeLanguage } = require('./helper/language')
-const { start, chooseLanguage ,addName, requestContact } = require('./helper/start')
-const { ShowDepeartment, allAnswers, positiveAnswers, positiveAnswersMoth, rejectedAnswersMoth, allAnswersMoth, allUsers, sentMessageToAllUsers, sentMessageToAllUsersMenu } = require('./helper/statistic')
+const { start, chooseLanguage ,addName, requestContact, idRMO, retryrequestContact } = require('./helper/start')
+const { ShowDepeartment, allAnswers, positiveAnswers, positiveAnswersMoth, rejectedAnswersMoth, allAnswersMoth, allUsers, sentMessageToAllUsers, sentMessageToAllUsersMenu, sentGraficToUsers } = require('./helper/statistic')
 
 bot.on('message' ,  async msg => {
     const chatId = msg.from.id
@@ -19,11 +19,19 @@ bot.on('message' ,  async msg => {
         if(user.action == 'choose_language') {
             chooseLanguage(msg)
         }
+        if(user.action == 'add_idRMO') {
+           idRMO(msg)
+        }
         if(user.action == 'add_name') {
-            addName(msg)
+            // addName(msg)
+           idRMO(msg)
+
         }
         if(user.action == 'request_contact') {
             requestContact(msg)
+        }
+        if(user.action == 'retry_request_contact') {
+            retryrequestContact(msg)
         }
         if(text == `🇷🇺/🇺🇿 Tilni o‘zgartirish` || text == `🇷🇺/🇺🇿 Сменить язык`) {
             changeLanguage(msg)
@@ -37,6 +45,9 @@ bot.on('message' ,  async msg => {
         if(user.action == 'addtime') {
             addApplication(msg)
         }
+        if(user.action == 'add_supervayzer') {
+            addSupervazer(msg)
+        }
         if(user.action == 'add_day_off_first') {
             addDayOffFirst(msg)
         }
@@ -49,7 +60,12 @@ bot.on('message' ,  async msg => {
         if(user.action == 'sent') {
             sentApplication(msg)
         }
-
+        if(user.action.includes('sent_message_to-')){
+            SentMessagetoUser(msg)
+        }
+        if(user.action.includes('sent-message-all')){
+            sentMessageToAllUsers(msg)
+        }
         if(user.admin) {
             if(text == 'So‘rovnomalar' || text == 'Запросы'  ) {
                 showApplication(msg)
@@ -72,12 +88,10 @@ bot.on('message' ,  async msg => {
             if(text == 'Xabar yuborish' || text == 'Отправит сообшения') {
                 sentMessageToAllUsersMenu(msg)
             }
+            if(text == 'Grafik yuborish' || text == 'Отправит график') {
+                sentGraficToUsers(msg)
+            }
         }
-        if(user.action.includes('sent_message_to-')){
-            SentMessagetoUser(msg)
-        }
-        if(user.action.includes('sent-message-all')){
-            sentMessageToAllUsers(msg)
-        }
+
     }
 })

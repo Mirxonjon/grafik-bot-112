@@ -1,9 +1,12 @@
 const {Schema, model} = require('mongoose')
 
 const User = new Schema({
+    IdNumber: String,
     full_name: String,
     chatId: Number,
     phone: String,
+    phone2: String,
+    sharePhone: String,
     admin: {
         type: Boolean,
         default: false
@@ -18,10 +21,10 @@ const User = new Schema({
         default : 0
     },
     lastMessageAdmin : String,
-    // status: {
-    //     type: Boolean,
-    //     default: true
-    // },
+    status: {
+        type: Boolean,
+        default: false
+    },
     language: String,
     // applications: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Applications' }],
     createdAt: Date

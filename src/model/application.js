@@ -8,6 +8,7 @@ const Applications = new Schema({
     application_latter: String,
     time: String,
     day_off: String,
+    supervayzer: String,
     sent: {
         type: Boolean,
         default: false

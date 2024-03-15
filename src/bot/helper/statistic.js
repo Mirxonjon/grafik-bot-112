@@ -1,6 +1,6 @@
 const StatisticAplication = require("../../model/statisticAplication")
 const User = require("../../model/user")
-const { formatDate, dateDayObj, InfoUserArr } = require("../../utils/time")
+const { formatDate, dateDayObj, InfoUserArr, sentAllOperatorGrafic } = require("../../utils/time")
 const { arrayToExcel } = require("../../utils/utils")
 const { bot } = require("../bot")
 const { statisticKeyboardRu, statisticKeyboardUz, CalendarKeyboardUz, adminKeyboardRu, adminKeyboardUZ, CalendarKeyboardRu } = require("../menu/keyboard")
@@ -245,6 +245,34 @@ const sentMessageToAllUsers = async (msg) => {
 
 }
 
+const  sentGraficToUsers = async(msg) => {
+
+    const chatId = msg.from.id 
+    const user = await User.findOne({chatId}).lean()
+
+    const sentAnswer = await  Promise.all(await sentAllOperatorGrafic(bot))
+if(sentAnswer) {
+    await  bot.sendMessage(chatId , user.language == 'uz' ? 'Grafiklar yuborildi' : 'Графики отправлено' )
+
+    await bot.sendMessage(chatId, user.language == 'uz' ? `Menyuni tanlang, ${user.admin ? 'Admin': user.full_name}`: `Выберите меню, ${user.admin ? 'Admin': user.full_name}`,{
+        reply_markup: {
+            keyboard: user.language == 'uz' ? adminKeyboardUZ : adminKeyboardRu ,
+            resize_keyboard: true
+        },
+    })
+} else  {
+    await  bot.sendMessage(chatId , user.language == 'uz' ? 'Grafiklar yuborilmadi' : 'Графики не отправлено' )
+
+    await bot.sendMessage(chatId, user.language == 'uz' ? `Menyuni tanlang, ${user.admin ? 'Admin': user.full_name}`: `Выберите меню, ${user.admin ? 'Admin': user.full_name}`,{
+        reply_markup: {
+            keyboard: user.language == 'uz' ? adminKeyboardUZ : adminKeyboardRu ,
+            resize_keyboard: true
+        },
+    })
+}
+
+}
+
 
 
 module.exports= {
@@ -257,5 +285,6 @@ module.exports= {
     positiveAnswers,
     allUsers,
     sentMessageToAllUsersMenu,
-    sentMessageToAllUsers
+    sentMessageToAllUsers,
+    sentGraficToUsers
 }

@@ -12,6 +12,11 @@ const adminKeyboardUZ = [
         {
             text:`Xabar yuborish`
         },
+    ],
+    [
+        {
+            text : 'Grafik yuborish'
+        },
         {
             text:`🇷🇺/🇺🇿 Tilni o‘zgartirish`
         }
@@ -29,6 +34,11 @@ const adminKeyboardRu = [
         },
         {
             text:'Отправит сообшения'
+        },
+    ],
+    [
+        {
+            text : 'Отправит график'
         },
         {
             text:`🇷🇺/🇺🇿 Сменить язык`
@@ -93,10 +103,10 @@ const timeKeyboard = [
             callback_data: 'time_17:00 - 02:00'
         },
         {
-            text: '08:00 - 20:00',
+            text: 'Смена',
             callback_data: 'time_08:00 - 20:00'
         }
-    ]
+    ],
 ]
 
 const daysKeyboard = async (user) => {
@@ -136,6 +146,9 @@ const daysKeyboard = async (user) => {
         { 
             text: user.language == 'uz' ?  'Yakshanba' : 'Воскресенье',
             callback_data: 'day_off-Sunday'
+        },
+        {
+            text: user.language == 'uz' ? 'Ortga qaytish' : 'Назад'
         }  
     ]
 ]
@@ -323,6 +336,26 @@ const CalendarKeyboardRu = [
 
 ]
 
+const SupervayzerKeyboard = [
+    [
+        {
+            text:`Шавкатов Комолиддин`
+        },
+        {
+            text:`Абсаловам Жахонгир`
+        }
+    ],
+    [
+        
+        {
+            text:`Юсупрва Наргиза`
+        },
+        {
+            text:`Исмаилова Нигора`
+        }
+    ]
+]
+
 module.exports = {
     adminKeyboardUZ,
     adminKeyboardRu,
@@ -333,5 +366,6 @@ module.exports = {
     statisticKeyboardUz,
     statisticKeyboardRu,
     CalendarKeyboardUz,
-    CalendarKeyboardRu
+    CalendarKeyboardRu,
+    SupervayzerKeyboard
 }

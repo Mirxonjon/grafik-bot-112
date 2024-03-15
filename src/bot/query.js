@@ -1,5 +1,6 @@
 const { bot } = require("./bot");
 const { addApplication, answerApplication, ApplicationChat } = require("./helper/application");
+const { addName } = require("./helper/start");
 const { positiveAnswers, rejectedAnswers, allAnswers } = require("./helper/statistic");
 
 bot.on('callback_query', async (query) => {
@@ -14,9 +15,10 @@ bot.on('callback_query', async (query) => {
     bot.answerCallbackQuery(query.id , {
         cache_time :0.5
     }).then(() => {
-
+        if(callbackName[0] == 'add-name'){
+            addName(query)
+        }
         if(callbackName[0] == 'appliaction'){
-
             answerApplication(query)
         }
         if(callbackName[0] == 'applicationChat') {
