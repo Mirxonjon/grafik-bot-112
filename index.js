@@ -13,8 +13,8 @@ app.use(express.json())
 require('./src/bot/bot')
 
 const job = new CronJob(
-	'9 * * * * *', // cronTime
-    // '0 59 23 * * *',
+	// '9 * * * * *', // cronTime
+    '0 59 23 * * *',
 	async () => {
         await updateAllOperatorDate(); 
       }, // onTick
