@@ -9,12 +9,9 @@ const  start = async( msg ) => {
     const chatId = msg.from.id
 
     let  checkUser =  await User.findOne({chatId}).lean()
-    console.log('okk');
-    console.log(checkUser, checkUser?.full_name && checkUser?.language && checkUser.status);
 
 
-    if(checkUser?.full_name && checkUser?.language && checkUser?.sharePhone ) {
-        console.log('okk');
+    if(checkUser?.full_name && checkUser?.language && checkUser?.sharePhone && checkUser.status ) {
 
         await User.findByIdAndUpdate(checkUser._id,{...checkUser ,  action:  'menu'  },{new:true})
 
@@ -25,22 +22,23 @@ const  start = async( msg ) => {
             },
         })
     }else if(checkUser && checkUser.status == false){
-        if(checkUser.action == 'choose_language') {
-            chooseLanguage(msg)
-        }
-        if(checkUser.action == 'add_idRMO') {
-           idRMO(msg)
-        }
-        if(checkUser.action == 'add_name') {
-            // addName(msg)
-           idRMO(msg)
-        }
-        if(checkUser.action == 'request_contact') {
-            requestContact(msg)
-        }
-        if(checkUser.action == 'retry_request_contact') {
-            retryrequestContact(msg)
-        }
+        
+        // if(checkUser.action == 'choose_language') {
+        //     chooseLanguage(msg)
+        // }
+        // if(checkUser.action == 'add_idRMO') {
+        //    idRMO(msg)
+        // }
+        // if(checkUser.action == 'add_name') {
+        //     // addName(msg)
+        //    idRMO(msg)
+        // }
+        // if(checkUser.action == 'request_contact') {
+        //     requestContact(msg)
+        // }
+        // if(checkUser.action == 'retry_request_contact') {
+        //     retryrequestContact(msg)
+        // }
     }else if (!checkUser) {
         let newUser = new User({
             chatId,
@@ -118,7 +116,6 @@ const idRMO = async (msg) => {
     const chatId = msg.from.id
     const text = msg.text
     let user = await User.findOne({chatId}).lean()
-    console.log(text,!isNaN(+text));
 
     if(!isNaN(+text)) {
 
@@ -193,7 +190,6 @@ const  addName = async (query) => {
     const chatId = query.from.id
     const data = query?.data?.split('_')
     
-    console.log(data);
 
         let user = await User.findOne({chatId}).lean()
         
@@ -248,10 +244,9 @@ const requestContact = async (msg) => {
     if(msg?.contact?.phone_number){
          phonetext = `+${+msg?.contact?.phone_number}`
          if (phonetext?.includes('+99') && !isNaN(+phonetext.split('+99')[1])  && phonetext.length >= 13 ){
-         // if (phonetext){
             if(phonetext == user.phone || phonetext == user.phone2){
                 user.sharePhone = phonetext
-                user.admin = phonetext.includes('998981888857') ? phonetext.includes('998981888857') : phonetext.includes('998933843484')
+                user.admin = phonetext.includes('998981888857') ? phonetext.includes('998981888857') : phonetext.includes('998777773351')
                 user.action = 'menu'
                 user.status = true
                 await User.findByIdAndUpdate(user._id,user,{new:true})
@@ -266,16 +261,37 @@ const requestContact = async (msg) => {
                 user.action = 'retry_request_contact'
                 user.sharePhone = phonetext
                 await User.findByIdAndUpdate(user._id,user,{new:true})
+                if(user.phone2) {
+                    bot.sendMessage(
+                        chatId,
+                        user.language == 'uz' ?`📱Shaxsingizni tasdiqlash uchun, telefon raqamni to'liq kiriting (masalan: +998******${user.phone.slice(-3)}  ${user?.phone2?.includes('+99') ? `, +998******${user.phone2?.slice(-3)}` : ' ' })` :   `📱Для подтверждения личности введите полный номер телефона (например: +998******${user.phone.slice(-3)}  ${user.phone2 ? `, +998******${user.phone2?.slice(-3)}` : ')' })`,
+                        {
+                            reply_markup: {
+                                remove_keyboard :  true
+                                // one_time_keyboard: true
+                            }
+                        })
+                } else {
+                    bot.sendMessage(
+                        chatId,
+                        user.language == 'uz' ?`📱Shaxsingizni tasdiqlash uchun, telefon raqamni to'liq kiriting (masalan: +998******${user.phone.slice(-3)} )` :   `📱Для подтверждения личности введите полный номер телефона (например: +998******${user.phone.slice(-3)})`,
+                        {
+                            reply_markup: {
+                                remove_keyboard :  true
+                                // one_time_keyboard: true
+                            }
+                        })
+                }
 
-                bot.sendMessage(
-                    chatId,
-                    user.language == 'uz' ?`📱Shaxsingizni tasdiqlash uchun, telefon raqamni to'liq kiriting (masalan: +998******${user.phone.slice(-3)}  ${user.phone2.includes('+99') ? `, +998******${user.phone2?.slice(-3)}` : ' ' })` :   `📱Для подтверждения личности введите полный номер телефона (например: +998******${user.phone.slice(-3)}  ${user.phone2 ? `, +998******${user.phone2?.slice(-3)}` : ')' })`,
-                    {
-                        reply_markup: {
-                            remove_keyboard :  true
-                            // one_time_keyboard: true
-                        }
-                    })
+                // bot.sendMessage(
+                //     chatId,
+                //     user.language == 'uz' ?`📱Shaxsingizni tasdiqlash uchun, telefon raqamni to'liq kiriting (masalan: +998******${user.phone.slice(-3)}  ${user?.phone2?.includes('+99') ? `, +998******${user.phone2?.slice(-3)}` : ' ' })` :   `📱Для подтверждения личности введите полный номер телефона (например: +998******${user.phone.slice(-3)}  ${user.phone2 ? `, +998******${user.phone2?.slice(-3)}` : ')' })`,
+                //     {
+                //         reply_markup: {
+                //             remove_keyboard :  true
+                //             // one_time_keyboard: true
+                //         }
+                //     })
             }
  
          } else {
@@ -331,7 +347,7 @@ const retryrequestContact = async (msg) => {
     if (phonetext?.includes('+99') && !isNaN(+phonetext?.split('+99')[1])  && phonetext?.length >= 13 ){
     if ( user.phone == phonetext || user.phone2 == phonetext){
         user.phone = phonetext
-        user.admin = phonetext.includes('998981888857') ? phonetext.includes('998981888857') : phonetext.includes('998933843484')
+        user.admin = phonetext.includes('998981888857') ? phonetext.includes('998981888857') : phonetext.includes('998777773351')
         user.action = 'menu'
         user.status = true
         await User.findByIdAndUpdate(user._id,user,{new:true})
@@ -355,14 +371,36 @@ const retryrequestContact = async (msg) => {
 
 
     } else {
-        bot.sendMessage(
-            chatId,
-            user.language == 'uz' ? `📱Iltimos to‘g‘ri kiriting! (masalan: +998******${user.phone.slice(-3)}  ${user.phone2.includes('+99') ? `, +998******${user.phone2?.slice(-3)}` : '' })` :   `📱Пожалуйста, введите правильно (например: +998******${user.phone.slice(-3)}  ${user.phone2 ? `, +998******${user.phone2?.slice(-3)}` : ')' })`,
-            {
-                reply_markup: {
-                remove_keyboard: true
-                }
-            })
+
+        if(user.phone2) {
+            bot.sendMessage(
+                chatId,
+                user.language == 'uz' ?`📱Shaxsingizni tasdiqlash uchun, telefon raqamni to'liq kiriting (masalan: +998******${user.phone.slice(-3)}  ${user?.phone2?.includes('+99') ? `, +998******${user.phone2?.slice(-3)}` : ' ' })` :   `📱Для подтверждения личности введите полный номер телефона (например: +998******${user.phone.slice(-3)}  ${user.phone2 ? `, +998******${user.phone2?.slice(-3)}` : ')' })`,
+                {
+                    reply_markup: {
+                        remove_keyboard :  true
+                        // one_time_keyboard: true
+                    }
+                })
+        } else {
+            bot.sendMessage(
+                chatId,
+                user.language == 'uz' ?`📱Shaxsingizni tasdiqlash uchun, telefon raqamni to'liq kiriting (masalan: +998******${user.phone.slice(-3)} )` :   `📱Для подтверждения личности введите полный номер телефона (например: +998******${user.phone.slice(-3)})`,
+                {
+                    reply_markup: {
+                        remove_keyboard :  true
+                        // one_time_keyboard: true
+                    }
+                })
+        }
+        // bot.sendMessage(
+        //     chatId,
+        //     user.language == 'uz' ? `📱Iltimos to‘g‘ri kiriting! (masalan: +998******${user.phone.slice(-3)}  ${user.phone2.includes('+99') ? `, +998******${user.phone2?.slice(-3)}` : '' })` :   `📱Пожалуйста, введите правильно (например: +998******${user.phone.slice(-3)}  ${user.phone2 ? `, +998******${user.phone2?.slice(-3)}` : ')' })`,
+        //     {
+        //         reply_markup: {
+        //         remove_keyboard: true
+        //         }
+        //     })
 
     }
 

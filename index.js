@@ -23,7 +23,6 @@ const job = new CronJob(
 	'Asia/Tashkent' // timeZone
 );
 // const dt = cron.sendAt('* * * * *');
-// console.log(`The job would run at: ${dt.toISO()}`);
 
 async function dev() {
     try {
