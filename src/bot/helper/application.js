@@ -492,7 +492,7 @@ const  sentApplication = async (msg) => {
     }
 
 }
-
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 const showApplication =  async (msg) => {
     const chatId = msg.from.id
     const text = msg.text
@@ -503,7 +503,9 @@ const showApplication =  async (msg) => {
 
     if(findAllApplications.length) {
 
+
     findAllApplications.forEach( async e => {
+        await delay(1000)
         bot.sendMessage(chatId , user.language == 'uz' ?  `
 <b>F.I.Sh:</b> ${e?.user?.full_name} 
 <b>Ulashilgan telefon raqam:</b> ${e.user?.sharePhone}
@@ -586,7 +588,7 @@ const ApplicationChat = async(query) => {
             })
         }  else{
             await User.findByIdAndUpdate(senderUser._id,{...senderUser , action : `sent_message_to-${getUser.chatId}`},{new:true})
-            bot.sendMessage(chatId , senderUser.language == 'uz' ?  `${getUser.full_name} ga Xabar yuborish` : `Вы отправили неправильное сообщение` , {
+            bot.sendMessage(chatId , senderUser.language == 'uz' ?  `${getUser.full_name} ga Xabar yuborish` : `Отправить сообщение на ${getUser.full_name}` , {
                 reply_markup: {
                     keyboard : [
                         [
@@ -717,7 +719,7 @@ ${findApplication.time == 'Смена' ? `<b>Супервайзер </b> : ${fin
 
         await User.findByIdAndUpdate(getUser._id,{...getUser, lastMessageAdmin : `${getUser.lastMessageAdmin} ${text}` ,},{new:true})
     
-        bot.sendMessage(getUser.chatId , getUser.language == 'uz' ?  `${senderUser.full_name} dan sizga habar :  ${text}` : `Вы отправили неправильное сообщение` , {
+        bot.sendMessage(getUser.chatId , getUser.language == 'uz' ?  `${senderUser.full_name} dan sizga habar :  ${text}` : `Сообщение от ${senderUser.full_name} : ${text}` , {
             reply_markup: {
                 inline_keyboard : [[{text:'Adminga Habar yuborish' , callback_data : `applicationChat_${senderUser?._id}`}]],
                 // remove_keyboard : true,
