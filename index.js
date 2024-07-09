@@ -1,5 +1,7 @@
 const  express = require('express')
 const mongoose = require('mongoose')
+const User = require('./src/model/user'); // User modelini to'g'ri yo'l bilan o'zgartiring
+const Applications = require('./src/model/application');
 const {CronJob} = require('cron')
 const  cron = require('cron')
 const { updateAllOperatorDate } = require('./src/utils/time')
@@ -40,3 +42,12 @@ async function dev() {
 }
 
 dev()
+
+app.get('/getAllApplications',async (req, res) => {
+    const users = await Applications.find().populate('user').lean()
+     console.log(users);
+        res.json({
+            message: 'ok',
+            users
+            })
+    })

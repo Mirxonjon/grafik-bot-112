@@ -258,8 +258,11 @@ const requestContact = async (msg) => {
          phonetext = `+${+msg?.contact?.phone_number}`
          if (phonetext?.includes('+99') && !isNaN(+phonetext.split('+99')[1])  && phonetext.length >= 13 ){
             if(phonetext == user.phone || phonetext == user.phone2){
+                const numbers =['+998998288822', '+9989989189990' , '+998981888857' , '+998770115057' , '+998950731015', '+998933843484', '998998288822', '9989989189990' , '998981888857' , '998770115057' , '998950731015', '998933843484'] // Try edit me
+
                 user.sharePhone = phonetext
-                user.admin = phonetext.includes('998981888857') ? phonetext.includes('998981888857') : phonetext.includes('998777773351')
+                // user.admin = phonetext.includes('998981888857') ? phonetext.includes('998981888857') : phonetext.includes('998777773351')\
+                user.admin = numbers.includes(phonetext)
                 user.action = 'menu'
                 user.status = true
                 await User.findByIdAndUpdate(user._id,user,{new:true})
@@ -359,8 +362,11 @@ const retryrequestContact = async (msg) => {
 
     if (phonetext?.includes('+99') && !isNaN(+phonetext?.split('+99')[1])  && phonetext?.length >= 13 ){
     if ( user.phone == phonetext || user.phone2 == phonetext){
+        const numbers =['+998998288822', '+9989989189990' , '+998981888857' , '+998770115057' , '+998950731015', '+998933843484', '998998288822', '9989989189990' , '998981888857' , '998770115057' , '998950731015', '998933843484'] // Try edit me
+
         user.phone = phonetext
-        user.admin = phonetext.includes('998981888857') ? phonetext.includes('998981888857') : phonetext.includes('998777773351')
+        // user.admin = phonetext.includes('998981888857') ? phonetext.includes('998981888857') : phonetext.includes('998777773351')
+        user.admin = numbers.includes(phonetext)
         user.action = 'menu'
         user.status = true
         await User.findByIdAndUpdate(user._id,user,{new:true})
