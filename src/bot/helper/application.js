@@ -454,7 +454,6 @@ const  sentApplication = async (msg) => {
         bot.sendMessage(chatId , user.language == 'uz' ?  `So‘rovingiz qabul qilindi!` : `Ваша заявка принята` , {
             reply_markup: {
                 keyboard : user.language=='uz' ? userKeyboardUz : userKeyboardRU ,
-                // remove_keyboard : true,
                 resize_keyboard: true
             }
         })
@@ -787,14 +786,14 @@ ${findApplications.time == 'Смена' ? `<b>Супервайзер </b> : ${fi
         sharePhone: user.sharePhone,
         requestCount : user.requestCount,
         application_latter : findApplications.application_latter,
-        time : findApplications.time,
+        time : findApplications.time ,
         day_off : findApplications.day_off ,
         sentdata : formatDate(findApplications.createdAt) ,
         admin_confirmation : 'Ha',
         createdAt: new Date(),
        })
 
-      await writeToSheet([[user.chatId, user.IdNumber, user.full_name, user.phone , user.sharePhone ,findApplications.application_latter , findApplications.time , findApplications.time == 'Смена' ? findApplications.supervayzer : findApplications.day_off, formatDate(findApplications.createdAt), 'HA' ,  formatDate(new Date())]])
+      await writeToSheet([[user.chatId, user.IdNumber, user.full_name, user.phone , user.sharePhone ,findApplications.application_latter , `${findApplications.time}: ${findApplications.time == 'Смена' ? findApplications.supervayzer : ` ` } `, findApplications.time == 'Смена' ? findApplications.supervayzer : findApplications.day_off, formatDate(findApplications.createdAt), 'HA' ,  formatDate(new Date())]])
 
        await addStatistic.save()
     } else {
@@ -843,7 +842,8 @@ ${findApplications.time == 'Смена' ? `<b>Супервайзер </b> : ${fi
             createdAt: new Date(),
            })
 
-           await writeToSheet([[user.chatId ,user.IdNumber, user.full_name, user.phone, user.sharePhone ,findApplications.application_latter , findApplications.time , findApplications.day_off, formatDate(findApplications.createdAt), `Yo'q` ,  formatDate(new Date())]])
+        //    await writeToSheet([[user.chatId ,user.IdNumber, user.full_name, user.phone, user.sharePhone ,findApplications.application_latter ,`${findApplications.time}: ${findApplications.time == 'Смена' ? findApplications.supervayzer : ` ` } ` , findApplications.day_off, formatDate(findApplications.createdAt), `Yo'q` ,  formatDate(new Date())]])
+           await writeToSheet([[user.chatId, user.IdNumber, user.full_name, user.phone , user.sharePhone ,findApplications.application_latter , `${findApplications.time}: ${findApplications.time == 'Смена' ? findApplications.supervayzer : ` ` } `, findApplications.time == 'Смена' ? findApplications.supervayzer : findApplications.day_off, formatDate(findApplications.createdAt), `Yo'q` ,  formatDate(new Date())]])
     
            await addStatistic.save()
     }
