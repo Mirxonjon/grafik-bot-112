@@ -45,9 +45,20 @@ dev()
 
 app.get('/getAllApplications',async (req, res) => {
     const users = await Applications.find().populate('user').lean()
-     console.log(users);
+    //  console.log(users);
         res.json({
             message: 'ok',
             users
             })
     })
+
+    app.get('/updateOperators',async (req, res) => {
+        // const users = await Applications.find().populate('user').lean()
+        //  console.log(users);
+
+        await updateAllOperatorDate(); 
+            res.json({
+                message: 'update',
+                
+                })
+        })
