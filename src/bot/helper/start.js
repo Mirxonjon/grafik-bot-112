@@ -404,7 +404,7 @@ const retryrequestContact = async (msg) => {
         } else {
             bot.sendMessage(
                 chatId,
-                user.language == 'uz' ?`📱Shaxsingizni tasdiqlash uchun, telefon raqamni to'liq kiriting (masalan: +998******${user.phone.slice(-3)} )` :   `📱Для подтверждения личности введите полный номер телефона (например: +998******${user.phone.slice(-3)})`,
+                user.language == 'uz' ?`📱Shaxsingizni tasdiqlash uchun, telefon raqamni to'liq kiriting (masalan: +998******${user?.phone?.slice(-3)} )` :   `📱Для подтверждения личности введите полный номер телефона (например: +998******${user?.phone?.slice(-3)})`,
                 {
                     reply_markup: {
                         remove_keyboard :  true
