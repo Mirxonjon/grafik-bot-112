@@ -11,6 +11,7 @@ bot.on('message' ,  async msg => {
 
 
     const user = await  User.findOne({chatId}).lean() 
+    console.log(user);
     if(text == '/start' || text == 'Menyu' || text == 'Меню' ){
         start(msg)
     }
